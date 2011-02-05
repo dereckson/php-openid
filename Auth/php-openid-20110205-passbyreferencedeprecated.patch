@@ -1,0 +1,65 @@
+diff --git a/Auth/OpenID/Consumer.php b/Auth/OpenID/Consumer.php
+index bffed4d..e498a24 100644
+--- a/Auth/OpenID/Consumer.php
++++ b/Auth/OpenID/Consumer.php
+@@ -1185,7 +1185,7 @@ class Auth_OpenID_GenericConsumer {
+         // oidutil.log('Performing discovery on %s' % (claimed_id,))
+         list($unused, $services) = call_user_func($this->discoverMethod,
+                                                   $claimed_id,
+-                                                  &$this->fetcher);
++                                                  $this->fetcher);
+ 
+         if (!$services) {
+             return new Auth_OpenID_FailureResponse(null,
+diff --git a/Auth/OpenID/Server.php b/Auth/OpenID/Server.php
+index fb7cc39..312a928 100644
+--- a/Auth/OpenID/Server.php
++++ b/Auth/OpenID/Server.php
+@@ -1704,7 +1704,7 @@ class Auth_OpenID_Server {
+     {
+         if (method_exists($this, "openid_" . $request->mode)) {
+             $handler = array($this, "openid_" . $request->mode);
+-            return call_user_func($handler, &$request);
++            return call_user_func($handler, $request);
+         }
+         return null;
+     }
+diff --git a/Auth/OpenID/TrustRoot.php b/Auth/OpenID/TrustRoot.php
+index 000440b..0f53958 100644
+--- a/Auth/OpenID/TrustRoot.php
++++ b/Auth/OpenID/TrustRoot.php
+@@ -413,7 +413,7 @@ function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
+     }
+ 
+     call_user_func_array($discover_function,
+-                         array($relying_party_url, &$fetcher));
++                         array($relying_party_url, $fetcher));
+ 
+     $return_to_urls = array();
+     $matching_endpoints = Auth_OpenID_extractReturnURL($endpoints);
+diff --git a/Auth/Yadis/Manager.php b/Auth/Yadis/Manager.php
+index ee6f68b..5829de6 100644
+--- a/Auth/Yadis/Manager.php
++++ b/Auth/Yadis/Manager.php
+@@ -413,7 +413,7 @@ class Auth_Yadis_Discovery {
+ 
+             list($yadis_url, $services) = call_user_func($discover_cb,
+                                                          $this->url,
+-                                                         &$fetcher);
++                                                         $fetcher);
+ 
+             $manager = $this->createManager($services, $yadis_url);
+         }
+diff --git a/Auth/Yadis/Yadis.php b/Auth/Yadis/Yadis.php
+index 9ea2db7..f885367 100644
+--- a/Auth/Yadis/Yadis.php
++++ b/Auth/Yadis/Yadis.php
+@@ -141,7 +141,7 @@ function Auth_Yadis_getServiceEndpoints($input_url, $xrds_parse_func,
+     }
+ 
+     $yadis_result = call_user_func_array($discover_func,
+-                                         array($input_url, &$fetcher));
++                                         array($input_url, $fetcher));
+ 
+     if ($yadis_result === null) {
+         return array($input_url, array());
